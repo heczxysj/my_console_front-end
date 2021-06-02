@@ -34,8 +34,8 @@ export default {
     return {
       // 数据绑定
       loginForm: {
-        username: '',
-        password: ''
+        username: '123456',
+        password: '123456'
       },
       // 表单验证规则
       loginFormRules: {
@@ -55,7 +55,11 @@ export default {
         // 根据表单验证结果觉得valid为true或false
         if (!valid) return
         const result = await axios.post('/session', { username: that.loginForm.username, password: that.loginForm.password })
-        console.log(result)
+        if (result.data.status !== 200) return that.$message.error('Login failed')
+        that.$message.success('Login successful')
+        window.sessionStorage.setItem('userid', result.data.user_id)
+        window.sessionStorage.setItem('username', result.data.user_name)
+        await that.$router.push('/home')
       })
     }
   }
